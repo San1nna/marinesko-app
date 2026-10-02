@@ -1,0 +1,6 @@
+{
+  "appId": "com.college.schedule",
+  "appName": "Marinesko App",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
