@@ -22,26 +22,11 @@ export default function App() {
   const [books, setBooks] = useState(() => getInitialBooksSync())
   const [callTimes, setCallTimes] = useState(() => getInitialCallTimesSync())
   const [theme, setTheme] = useState(() => localStorage.getItem('college_theme') || 'slate')
-  const [isOnline, setIsOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true)
-  const [installPrompt, setInstallPrompt] = useState(null)
-  const [isStandalone, setIsStandalone] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
-  })
 
   const handleSelectGroup = async (groupName) => {
     const updated = await switchGroup(groupName)
     if (updated) {
       setSchedule(updated)
-    }
-  }
-
-  const handleInstallClick = async () => {
-    if (!installPrompt) return
-    installPrompt.prompt()
-    const { outcome } = await installPrompt.userChoice
-    if (outcome === 'accepted') {
-      setInstallPrompt(null)
     }
   }
 
@@ -57,25 +42,6 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHash)
   }, [])
 
-  useEffect(() => {
-    const onOnline = () => setIsOnline(true)
-    const onOffline = () => setIsOnline(false)
-    window.addEventListener('online', onOnline)
-    window.addEventListener('offline', onOffline)
-    return () => {
-      window.removeEventListener('online', onOnline)
-      window.removeEventListener('offline', onOffline)
-    }
-  }, [])
-
-  useEffect(() => {
-    const handlePrompt = (e) => {
-      e.preventDefault()
-      setInstallPrompt(e)
-    }
-    window.addEventListener('beforeinstallprompt', handlePrompt)
-    return () => window.removeEventListener('beforeinstallprompt', handlePrompt)
-  }, [])
 
   useEffect(() => {
     const updateTime = () => setCurrentDate(new Date())
@@ -122,7 +88,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen theme-bg-main theme-text-main flex flex-col items-center">
-      <div className="w-full max-w-md min-h-screen flex flex-col px-4 pb-28 safe-area-top">
+      <div className="w-full max-w-md min-h-screen flex flex-col px-4 pt-3 pb-20">
         <header className="flex items-center justify-between pb-3 mb-4 border-b theme-border">
           <div className="flex items-baseline gap-2.5">
             <h1 className="text-base font-semibold tracking-tight theme-text-main">
@@ -140,12 +106,7 @@ export default function App() {
             >
               {schedule?.group || 'Выбрать'}
             </button>
-            <div
-              className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                isOnline ? 'bg-emerald-500/90' : 'bg-amber-500/90'
-              }`}
-              title={isOnline ? 'В сети' : 'Офлайн режим'}
-            />
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/80" title="Офлайн режим" />
           </div>
         </header>
 
@@ -168,17 +129,13 @@ export default function App() {
                 currentTheme={theme}
                 onSelectTheme={setTheme}
                 currentDate={currentDate}
-                isOnline={isOnline}
-                isStandalone={isStandalone}
-                installPrompt={installPrompt}
-                onInstall={handleInstallClick}
               />
             )}
           </div>
         </main>
       </div>
 
-      <nav className="fixed bottom-0 inset-x-0 bg-[var(--bg-main)]/95 backdrop-blur-md border-t theme-border z-40 safe-area-bottom">
+      <nav className="fixed bottom-0 inset-x-0 bg-[var(--bg-main)]/95 backdrop-blur-md border-t theme-border z-40">
         <div className="max-w-md mx-auto flex items-center justify-around py-2 px-6">
           <button
             onClick={() => setActiveTab('schedule')}

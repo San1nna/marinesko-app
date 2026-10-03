@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Plus, Trash2, RotateCcw, Check, X, GraduationCap, MapPin, Clock, Calendar, Send, MessageCircle, Headphones, ExternalLink, Download, Smartphone, CheckCircle2 } from 'lucide-react'
+import { Plus, Trash2, RotateCcw, Check, X, GraduationCap, MapPin, Clock, Calendar, Send, MessageCircle, Headphones, ExternalLink } from 'lucide-react'
 import { saveCallTimes, resetCallTimes, switchGroup, resetScheduleToDefault } from '../services/storage'
 import { getCollegeWeekInfo } from '../data/collegeScheduleData'
 import GroupSelectModal from './GroupSelectModal'
@@ -14,22 +14,9 @@ const THEMES = [
   { id: 'light', name: 'Minimal Light', bg: '#f8fafc', dot: '#0f172a', isLight: true }
 ]
 
-export default function InfoView({
-  schedule,
-  onUpdate,
-  callTimes,
-  onUpdateCalls,
-  currentTheme,
-  onSelectTheme,
-  currentDate = new Date(),
-  isOnline = true,
-  isStandalone = false,
-  installPrompt = null,
-  onInstall = null
-}) {
+export default function InfoView({ schedule, onUpdate, callTimes, onUpdateCalls, currentTheme, onSelectTheme, currentDate = new Date() }) {
   const weekInfo = useMemo(() => getCollegeWeekInfo(currentDate), [currentDate])
   const [showGroupModal, setShowGroupModal] = useState(false)
-  const [showIosTip, setShowIosTip] = useState(false)
   const [activeShift, setActiveShift] = useState('1 смена')
   const [showAddCall, setShowAddCall] = useState(false)
   const [newPair, setNewPair] = useState('')
@@ -294,63 +281,6 @@ export default function InfoView({
             )
           })}
         </div>
-      </div>
-
-      <div className="theme-bg-card rounded-xl p-4 border theme-border space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Smartphone className="w-4 h-4 theme-text-accent" />
-            <h3 className="text-xs font-semibold theme-text-main">
-              Приложение на устройстве
-            </h3>
-          </div>
-          <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isOnline ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' : 'border-amber-500/30 text-amber-400 bg-amber-500/10'}`}>
-            {isOnline ? 'В сети' : 'Офлайн'}
-          </span>
-        </div>
-
-        {isStandalone ? (
-          <div className="p-2.5 rounded-xl theme-bg-subtle border theme-border flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="text-xs theme-text-muted">
-              Запущено в полноэкранном режиме
-            </span>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {installPrompt && (
-              <button
-                onClick={onInstall}
-                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl theme-btn-accent text-xs font-semibold active:scale-98 transition-all"
-              >
-                <Download className="w-4 h-4 stroke-[2]" />
-                <span>Установить приложение</span>
-              </button>
-            )}
-
-            <button
-              onClick={() => setShowIosTip(!showIosTip)}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl theme-bg-subtle border theme-border hover:border-zinc-700 active:scale-98 transition-all text-left"
-            >
-              <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 theme-text-muted" />
-                <span className="text-xs theme-text-main">Как установить на iPhone</span>
-              </div>
-              <span className="text-[10px] theme-text-accent font-medium">
-                {showIosTip ? 'Скрыть' : 'Инструкция'}
-              </span>
-            </button>
-
-            {showIosTip && (
-              <div className="p-3 rounded-xl theme-bg-subtle border theme-border text-xs theme-text-muted space-y-1.5 animate-fade-in">
-                <p>1. Откройте страницу в Safari на iPhone.</p>
-                <p>2. Нажмите кнопку «Поделиться» (иконка квадрата со стрелкой вверх внизу экрана).</p>
-                <p>3. Прокрутите меню и выберите «На экран «Домой»».</p>
-                <p>4. Иконка появится на рабочем столе и будет запускаться на весь экран.</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       <div className="theme-bg-card rounded-xl p-4 border theme-border space-y-3">
