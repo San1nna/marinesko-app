@@ -28,17 +28,14 @@
     
     <!-- Group Picker Pill -->
     <button id="groupPill" class="tap-effect flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10">
-      <div class="w-6 h-6 rounded-full theme-bg-accent text-white flex items-center justify-center font-bold text-xs">
+      <div id="anchorBtn" class="w-6 h-6 rounded-full theme-bg-accent text-white flex items-center justify-center font-bold text-xs select-none">
         ⚓
       </div>
       <div class="text-left">
         <span class="text-[9px] uppercase tracking-wider opacity-60 block leading-none font-semibold">Коледж</span>
-        <div class="flex items-center gap-1.5 mt-0.5">
-          <span id="currentGroupLabel" class="text-xs font-bold leading-none block">Група 111</span>
-          <span id="groupLockIcon" class="hidden text-[10px]" title="Зафіксовано для цього пристрою">🔒</span>
-        </div>
+        <span id="currentGroupLabel" class="text-xs font-bold leading-none block mt-0.5">Група 111</span>
       </div>
-      <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60 ml-0.5"></i>
+      <i id="groupChevron" data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60 ml-0.5"></i>
     </button>
 
     <!-- Week Toggle Pill -->

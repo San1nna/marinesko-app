@@ -241,6 +241,18 @@ if (todayIdx >= 1 && todayIdx <= 5) {
   currentDay = 'mon';
 }
 
+// Admin mode detection
+const urlParams = new URLSearchParams(window.location.search);
+let isAdmin = urlParams.has('admin') || 
+              window.location.pathname.includes('admin') || 
+              window.location.href.includes('admin') ||
+              localStorage.getItem('marinesko_admin') === 'true';
+
+if (isAdmin) {
+  localStorage.setItem('marinesko_admin', 'true');
+  isGroupLocked = false;
+}
+
 // --- HARDWARE FINGERPRINT GENERATOR ---
 async function getDeviceFingerprint() {
   if (cachedDeviceId) return cachedDeviceId;
@@ -294,6 +306,12 @@ async function getDeviceFingerprint() {
 
 // --- SUPABASE DEVICE LOCK SERVICE ---
 async function checkSupabaseLock() {
+  if (isAdmin) {
+    console.log('Admin mode active: all 53 groups unlocked.');
+    isGroupLocked = false;
+    return false;
+  }
+
   try {
     const deviceId = await getDeviceFingerprint();
     const url = `${SUPABASE_URL}/rest/v1/user_devices?device_id=eq.${deviceId}&select=group_name`;
@@ -317,7 +335,7 @@ async function checkSupabaseLock() {
   }
 
   // Fallback to local storage lock
-  if (localStorage.getItem('marinesko_group_locked') === 'true') {
+  if (!isAdmin && localStorage.getItem('marinesko_group_locked') === 'true') {
     applyPermanentLock(localStorage.getItem('marinesko_group') || '111');
     return true;
   }
@@ -325,21 +343,22 @@ async function checkSupabaseLock() {
 }
 
 function applyPermanentLock(lockedGroup) {
+  if (isAdmin) return; // Never lock admin!
+
   isGroupLocked = true;
   currentGroup = lockedGroup;
   localStorage.setItem('marinesko_group', lockedGroup);
   localStorage.setItem('marinesko_group_locked', 'true');
 
   const groupPill = document.getElementById('groupPill');
-  const chevron = groupPill ? groupPill.querySelector('[data-lucide="chevron-down"]') : null;
-  const lockIcon = document.getElementById('groupLockIcon');
+  const chevron = document.getElementById('groupChevron');
 
   if (groupPill) {
     groupPill.style.pointerEvents = 'none';
-    groupPill.title = 'Групу зафіксовано для цього пристрою (зміна заблокована)';
   }
-  if (chevron) chevron.style.display = 'none';
-  if (lockIcon) lockIcon.classList.remove('hidden');
+  if (chevron) {
+    chevron.style.display = 'none';
+  }
 
   updateGroupBadge();
   renderSchedule();
@@ -396,10 +415,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   const groupModal = document.getElementById('groupModal');
   const closeGroupModal = document.getElementById('closeGroupModal');
   const groupSearch = document.getElementById('groupSearch');
+  const anchorBtn = document.getElementById('anchorBtn');
+
+  // Secret Admin Toggle: 5 taps on the anchor icon
+  let anchorClicks = 0;
+  let anchorTimer = null;
+  if (anchorBtn) {
+    anchorBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      anchorClicks++;
+      clearTimeout(anchorTimer);
+      anchorTimer = setTimeout(() => { anchorClicks = 0; }, 1500);
+      if (anchorClicks >= 5) {
+        anchorClicks = 0;
+        isAdmin = !isAdmin;
+        localStorage.setItem('marinesko_admin', isAdmin ? 'true' : 'false');
+        alert(isAdmin ? 'Режим адміністратора: всі 53 групи розблоковано!' : 'Режим адміністратора вимкнено.');
+        location.reload();
+      }
+    });
+  }
 
   if (groupPill && groupModal) {
     groupPill.addEventListener('click', () => {
-      if (isGroupLocked) return;
+      if (isGroupLocked && !isAdmin) return;
       openGroupModal();
     });
   }
@@ -427,14 +466,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   checkIosInstallPrompt();
 
   // Initial Renders
+  if (isAdmin) {
+    isGroupLocked = false;
+    localStorage.removeItem('marinesko_group_locked');
+    const chevron = document.getElementById('groupChevron');
+    const groupPill = document.getElementById('groupPill');
+    if (groupPill) groupPill.style.pointerEvents = 'auto';
+    if (chevron) chevron.style.display = 'block';
+  }
+
   updateGroupBadge();
   highlightActiveDay();
   renderSchedule();
   renderBooks();
   startBellTimer();
 
-  // Check hardware lock from Supabase
-  await checkSupabaseLock();
+  // Check hardware lock from Supabase (skip for admin)
+  if (!isAdmin) {
+    await checkSupabaseLock();
+  }
 
   // Initialize Lucide icons
   if (window.lucide) {
@@ -548,7 +598,7 @@ function updateGroupBadge() {
 
 // Open Group Select Modal
 function openGroupModal() {
-  if (isGroupLocked) return;
+  if (isGroupLocked && !isAdmin) return;
   const modal = document.getElementById('groupModal');
   if (!modal) return;
   modal.classList.remove('hidden');
@@ -581,7 +631,7 @@ function renderGroupList(query) {
           <div class="text-sm font-bold ${isSelected ? 'theme-accent' : ''}">${g.group}</div>
           <div class="text-[11px] opacity-60">${g.spec} • ${g.course} курс (${g.base})</div>
         </div>
-        <span class="text-xs px-2 py-1 rounded-lg bg-white/10 font-medium">Обрати назавжди</span>
+        <span class="text-xs px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 font-medium">Обрати</span>
       </div>
     `;
   });
@@ -589,17 +639,21 @@ function renderGroupList(query) {
   listElem.innerHTML = html;
 }
 
-// Permanent Select Group with Supabase Registration
+// Silent Group Selection (Permanent Device Lock for Users, Free Switch for Admin)
 window.confirmSelectGroup = async function(grp) {
-  if (isGroupLocked) return;
+  if (isGroupLocked && !isAdmin) return;
 
-  const confirmed = confirm(
-    `Ви обираєте групу: ${grp}?\n\n⚠️ УВАГА: Групу для цього пристрою можна обрати ТІЛЬКИ ОДИН РАЗ!\nЗмінити її буде НЕМОЖЛИВО навіть при скиданні чи очищенні пам'яті телефону.`
-  );
+  if (isAdmin) {
+    currentGroup = grp;
+    localStorage.setItem('marinesko_group', grp);
+    updateGroupBadge();
+    renderSchedule();
+    const modal = document.getElementById('groupModal');
+    if (modal) modal.classList.add('hidden');
+    return;
+  }
 
-  if (!confirmed) return;
-
-  // Optimistically lock
+  // Regular user: silent permanent lock (no notification/confirm popup)
   applyPermanentLock(grp);
 
   // Send hardware lock to Supabase
