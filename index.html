@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ru" class="dark">
   <head>
     <meta charset="UTF-8" />
@@ -21,8 +21,39 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script type="module" crossorigin src="./assets/index-ors-34lh.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-cxDtxek9.css">
+      <style>
+      html, body {
+        width: 100% !important;
+        min-height: 100% !important;
+        overflow-x: hidden !important;
+        overscroll-behavior-y: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      #root {
+        width: 100% !important;
+        min-height: 100vh !important;
+        overflow-x: hidden !important;
+      }
+      header {
+        padding-top: max(18px, env(safe-area-inset-top)) !important;
+        padding-left: max(16px, env(safe-area-inset-left)) !important;
+        padding-right: max(16px, env(safe-area-inset-right)) !important;
+      }
+      main {
+        padding-left: max(16px, env(safe-area-inset-left)) !important;
+        padding-right: max(16px, env(safe-area-inset-right)) !important;
+        padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important;
+      }
+      nav.fixed.bottom-0, nav[class*="bottom-0"] {
+        padding-bottom: max(22px, env(safe-area-inset-bottom)) !important;
+        padding-left: max(16px, env(safe-area-inset-left)) !important;
+        padding-right: max(16px, env(safe-area-inset-right)) !important;
+      }
+    </style>
   </head>
   <body class="min-h-screen">
     <div id="root"></div>
   </body>
 </html>
+
