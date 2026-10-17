@@ -1,0 +1,243 @@
+/* Marinesko iOS Native Web App Stylesheet - Perfect Safe Areas */
+
+:root {
+  --bg-app: #09090b;
+  --bg-card: rgba(24, 24, 27, 0.75);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.25);
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --header-bg: rgba(9, 9, 11, 0.88);
+  --tab-bg: rgba(18, 18, 20, 0.92);
+}
+
+/* 7 Themes */
+body[data-theme="slate"] {
+  --bg-app: #09090b;
+  --bg-card: rgba(24, 24, 27, 0.75);
+  --border-card: rgba(255, 255, 255, 0.08);
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --header-bg: rgba(9, 9, 11, 0.88);
+  --tab-bg: rgba(18, 18, 20, 0.92);
+}
+
+body[data-theme="oled"] {
+  --bg-app: #000000;
+  --bg-card: rgba(14, 14, 16, 0.92);
+  --border-card: rgba(255, 255, 255, 0.07);
+  --accent: #3b82f6;
+  --accent-light: #60a5fa;
+  --header-bg: rgba(0, 0, 0, 0.92);
+  --tab-bg: rgba(8, 8, 10, 0.96);
+}
+
+body[data-theme="midnight"] {
+  --bg-app: #060c14;
+  --bg-card: rgba(12, 25, 44, 0.75);
+  --border-card: rgba(56, 189, 248, 0.15);
+  --accent: #0ea5e9;
+  --accent-light: #38bdf8;
+  --header-bg: rgba(6, 12, 20, 0.88);
+  --tab-bg: rgba(10, 20, 36, 0.92);
+}
+
+body[data-theme="emerald"] {
+  --bg-app: #050f09;
+  --bg-card: rgba(11, 34, 20, 0.75);
+  --border-card: rgba(52, 211, 153, 0.15);
+  --accent: #10b981;
+  --accent-light: #34d399;
+  --header-bg: rgba(5, 15, 9, 0.88);
+  --tab-bg: rgba(9, 28, 17, 0.92);
+}
+
+body[data-theme="amethyst"] {
+  --bg-app: #0c0614;
+  --bg-card: rgba(26, 15, 44, 0.75);
+  --border-card: rgba(192, 132, 252, 0.15);
+  --accent: #a855f7;
+  --accent-light: #c084fc;
+  --header-bg: rgba(12, 6, 20, 0.88);
+  --tab-bg: rgba(20, 10, 34, 0.92);
+}
+
+body[data-theme="ruby"] {
+  --bg-app: #120508;
+  --bg-card: rgba(39, 11, 19, 0.75);
+  --border-card: rgba(251, 113, 133, 0.15);
+  --accent: #f43f5e;
+  --accent-light: #fb7185;
+  --header-bg: rgba(18, 5, 8, 0.88);
+  --tab-bg: rgba(30, 8, 15, 0.92);
+}
+
+body[data-theme="light"] {
+  --bg-app: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --border-card: rgba(0, 0, 0, 0.08);
+  --accent: #4f46e5;
+  --accent-light: #6366f1;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --header-bg: rgba(248, 250, 252, 0.92);
+  --tab-bg: rgba(255, 255, 255, 0.96);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-app);
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================================
+   PERFECT iOS SAFE AREA BOUNDARIES (TOP, BOTTOM, LEFT, RIGHT)
+   ======================================================== */
+
+.ios-header {
+  /* Dynamic Island / Notch safe area with minimum comfortable gap */
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  background-color: var(--header-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-card);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.ios-content {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  /* Large bottom buffer so the last item is never hidden behind floating navigation */
+  padding-bottom: calc(105px + env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ios-tab-bar {
+  /* Comfortably above the iPhone Home Indicator swipe bar */
+  padding-bottom: max(22px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  background-color: var(--tab-bg);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-top: 1px solid var(--border-card);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+}
+
+/* Cards & Glass */
+.app-card {
+  background-color: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+.app-card:active {
+  transform: scale(0.985);
+}
+
+/* Interactive elements tap effect */
+.tap-effect {
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.tap-effect:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+/* Dynamic Accent Elements */
+.theme-accent {
+  color: var(--accent);
+}
+
+.theme-bg-accent {
+  background-color: var(--accent);
+}
+
+.theme-border-accent {
+  border-color: var(--accent);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.bounce-slow {
+  animation: bounceSlow 2s infinite ease-in-out;
+}
