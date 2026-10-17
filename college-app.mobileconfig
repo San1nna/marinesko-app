@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -14,11 +14,11 @@ iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAARcUlEQVR4nO3czXUb1x2HYYnHTUTuR1ky
             <key>IsRemovable</key>
             <true/>
             <key>Label</key>
-            <string>Расписание</string>
+            <string>Р Р°СЃРїРёСЃР°РЅРёРµ</string>
             <key>PayloadDescription</key>
-            <string>Расписание занятий Мореходного колледжа им. Маринеско</string>
+            <string>Р Р°СЃРїРёСЃР°РЅРёРµ Р·Р°РЅСЏС‚РёР№ РњРѕСЂРµС…РѕРґРЅРѕРіРѕ РєРѕР»Р»РµРґР¶Р° РёРј. РњР°СЂРёРЅРµСЃРєРѕ</string>
             <key>PayloadDisplayName</key>
-            <string>Расписание</string>
+            <string>Р Р°СЃРїРёСЃР°РЅРёРµ</string>
             <key>PayloadIdentifier</key>
             <string>com.college.marinesko.webclip</string>
             <key>PayloadType</key>
@@ -30,15 +30,15 @@ iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAARcUlEQVR4nO3czXUb1x2HYYnHTUTuR1ky
             <key>Precomposed</key>
             <true/>
             <key>URL</key>
-            <string>https://college-schedule.local</string>
+            <string>https://san1nna.github.io/marinesko-app/</string>
         </dict>
     </array>
     <key>PayloadDisplayName</key>
-    <string>Колледж Маринеско (Расписание)</string>
+    <string>РљРѕР»Р»РµРґР¶ РњР°СЂРёРЅРµСЃРєРѕ (Р Р°СЃРїРёСЃР°РЅРёРµ)</string>
     <key>PayloadIdentifier</key>
     <string>com.college.marinesko.profile</string>
     <key>PayloadOrganization</key>
-    <string>ВСП МФК ім. О.І. Маринеска НУ ОМА</string>
+    <string>Р’РЎРџ РњР¤Рљ С–Рј. Рћ.Р†. РњР°СЂРёРЅРµСЃРєР° РќРЈ РћРњРђ</string>
     <key>PayloadRemovalDisallowed</key>
     <false/>
     <key>PayloadType</key>
@@ -49,3 +49,4 @@ iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAARcUlEQVR4nO3czXUb1x2HYYnHTUTuR1ky
     <integer>1</integer>
 </dict>
 </plist>
+
