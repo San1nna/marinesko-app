@@ -53,12 +53,6 @@
       "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Книги",
-      "short_name": "Книги",
-      "url": "./#books",
-      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
-    },
-    {
       "name": "Звонки",
       "short_name": "Звонки",
       "url": "./#info",

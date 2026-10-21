@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marinesko-pwa-v1.3.5'
+const CACHE_NAME = 'marinesko-pwa-v1.3.6'
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -40,7 +40,8 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return
 
-  if (event.request.mode === 'navigate') {
+  // Always Network First for HTML and navigation requests
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
@@ -51,8 +52,8 @@ self.addEventListener('fetch', (event) => {
           return response
         })
         .catch(async () => {
-          const cachedNav = await caches.match(event.request)
-          if (cachedNav) return cachedNav
+          const cached = await caches.match(event.request)
+          if (cached) return cached
           const fallback = await caches.match('./index.html')
           if (fallback) return fallback
           return caches.match('./')
@@ -61,17 +62,18 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
+  // Stale-while-revalidate / Network first for other assets
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) return cachedResponse
-
-      return fetch(event.request).then((networkResponse) => {
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
           const clone = networkResponse.clone()
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone))
         }
         return networkResponse
-      })
+      }).catch(() => null)
+
+      return cachedResponse || fetchPromise
     })
   )
 })
