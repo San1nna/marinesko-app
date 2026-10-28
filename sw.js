@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marinesko-pwa-v1.3.6'
+const CACHE_NAME = 'marinesko-pwa-v2.0.5'
 const PRECACHE_ASSETS = [
   './',
   './index.html',
